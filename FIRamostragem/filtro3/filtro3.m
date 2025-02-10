@@ -1,11 +1,12 @@
-# 4. Projete um filtro rejeita-faixa usando o método da amostragem em frequência que satisfaça a
+# 3. Projete um filtro passa-faixa usando o método da amostragem em frequência que satisfaça a
 # especificação a seguir:
 # • M = 52
-# • Ωp1 = 2 rad/s
-# • Ωr1 = 3 rad/s
-# • Ωr2 = 7 rad/s
-# • Ωp2 = 8 rad/s
-# • Ωs = 20,0 rad/s 
+# • Ωr1 = 2 rad/s
+# • Ωp1 = 3 rad/s
+# • Ωp2 = 7 rad/s
+# • Ωr2 = 8 rad/s
+# • Ωs = 20,0 rad/s
+# • Agora aumente o número de amostras, mantendo sua paridade e faça suas considerações.
 
 clear all
 
@@ -13,10 +14,10 @@ clear all
 multiplicador = 10;
 M = 52 * multiplicador;
 N = M+1;
-Omega_p1 = 2;
-Omega_r1 = 3;
-Omega_r2 = 7;
-Omega_p2 = 8;
+Omega_r1 = 2;
+Omega_p1 = 3;
+Omega_p2 = 7;
+Omega_r2 = 8;
 Omega_s = 20;
 
 % Fazendo o filtro passa faixas: 
@@ -26,18 +27,13 @@ kr1 = floor(N*Omega_r1/Omega_s);
 kp2 = floor(N*Omega_p2/Omega_s);
 kr2 = floor(N*Omega_r2/Omega_s);
 
+% Permite as primeiras bandas e rejeita as últimas, passa baixas
 
-if (kr1-kp1)>1
-    kp1=kr1-1;
-end
-
-if (kr2-kp2)>1
-    kp2 = kr2-1;
-end
+# A = [zeros(1,kr1+1) ones(1, kp2-kp1+2) zeros(1, M/2 - kr2+1)];
 
 # % Vetor A para um passa-faixa
-A = ones(1, M/2 + 1);
-A(kr1:kp2) = 0; 
+A = zeros(1, M/2 + 1);
+A(kp1:kr2) = 1;  % Define a banda de passagem entre kp1 e kr2
 
 % Algoritmo do tipo 1
 
@@ -62,5 +58,6 @@ title('Resposta em Frequência')
 % Plot da resposta ao impulso
 figure(2)
 stem(h)
+title('Resposta ao impulso');
 ylabel('Resposta ao impulso');
 xlabel('amostras (n)');

@@ -1,4 +1,4 @@
-# 3. Projete um filtro passa-faixa usando o método da amostragem em frequência que satisfaça a
+# 5. Projete um filtro passa-faixa tipo III usando o método da amostragem em frequência que satisfaça a
 # especificação a seguir:
 # • M = 52
 # • Ωr1 = 2 rad/s
@@ -6,7 +6,8 @@
 # • Ωp2 = 7 rad/s
 # • Ωr2 = 8 rad/s
 # • Ωs = 20,0 rad/s
-# • Agora aumente o número de amostras, mantendo sua paridade e faça suas considerações.
+# • Agora aumente o número de amostras, mantendo sua paridade. Compare com os resultados da
+# questão 3.
 
 clear all
 
@@ -28,31 +29,20 @@ kp2 = floor(N*Omega_p2/Omega_s);
 kr2 = floor(N*Omega_r2/Omega_s);
 
 
-if (kr1-kp1)>1
-    kp1=kr1-1;
-end
-
-if (kr2-kp2)>1
-    kp2 = kr2-1;
-end
-
-% Permite as primeiras bandas e rejeita as últimas, passa baixas
-
-# A = [zeros(1,kr1+1) ones(1, kp2-kp1+2) zeros(1, M/2 - kr2+1)];
-
 # % Vetor A para um passa-faixa
 A = zeros(1, M/2 + 1);
+A(1) = 0;
 A(kp1:kr2) = 1;  % Define a banda de passagem entre kp1 e kr2
 
-% Algoritmo do tipo 1
+% Algoritmo do tipo 3
 
 k = 1:M/2;
 
 for n=0:M,
-    h(n+1) = A(1) + 2*sum((-1).^k.*A(k+1).*cos(pi.*k*(1+2*n)/N));
+    h(n+1) = sum((-1).^(k+1).*A(k+1).*sin(pi.*k*(1+2*n)/N));
 end;
 
-h = h./N;
+h = 2*(h./N);
 
 [H,w]=freqz(h,1,2048,Omega_s);
 
@@ -67,5 +57,6 @@ title('Resposta em Frequência')
 % Plot da resposta ao impulso
 figure(2)
 stem(h)
+title('Resposta ao impulso');
 ylabel('Resposta ao impulso');
 xlabel('amostras (n)');

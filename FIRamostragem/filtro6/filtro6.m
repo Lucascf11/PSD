@@ -21,19 +21,16 @@ kp = floor(N*Omega_p/Omega_s);
 kr = floor(N*Omega_r/Omega_s);
 
 
-if (kr-kp)>1
-    kp=kr-1;
-end
-
 % Permite as primeiras bandas e rejeita as últimas, passa baixas
 
-A = zeros(1, N/2 + 1);
+
+A = zeros(1, N/2 + 1); % N = M+1
 A(N/2) = 0;
 A(1:kr) = 1; 
 
 % Algoritmo do tipo 1
 
-k = 1:O/2;
+k = 1:O/2; % O = M - 1
 
 for n=0:M,
     h(n+1) = A(1) + 2*sum((-1).^k.*A(k+1).*cos(pi.*k*(1+2*n)/N));
@@ -54,5 +51,6 @@ title('Resposta em Frequência')
 % Plot da resposta ao impulso
 figure(2)
 stem(h)
+title('Resposta ao impulso');
 ylabel('Resposta ao impulso');
 xlabel('amostras (n)');
