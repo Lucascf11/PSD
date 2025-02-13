@@ -7,6 +7,9 @@
 # • Ωr2 = 1600 rad/s
 # • Ωs = 10000 rad/s 
 
+clear all;
+pkg load signal;
+
 Ap = 1;
 
 Ar = 80;
